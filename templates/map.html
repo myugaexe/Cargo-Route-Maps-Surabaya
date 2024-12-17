@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <script>
+        L_NO_TOUCH = false;
+        L_DISABLE_3D = false;
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css" />
+    <link rel="stylesheet" href="static/map_style.css" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+<body>
+    <div class="folium-map" id="map_c3b491db02189ba944d6ab704b48bd5f"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+
+    <script>
+        var map_c3b491db02189ba944d6ab704b48bd5f = L.map("map_c3b491db02189ba944d6ab704b48bd5f", {
+            center: [-7.2574, 112.7521],
+            crs: L.CRS.EPSG3857,
+            zoom: 12,
+            zoomControl: true,
+            preferCanvas: false,
+        });
+
+        var tileLayer = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors",
+            detectRetina: false,
+            maxNativeZoom: 19,
+            maxZoom: 19,
+            minZoom: 0,
+            noWrap: false,
+            opacity: 1,
+            subdomains: "abc",
+            tms: false
+        });
+
+        tileLayer.addTo(map_c3b491db02189ba944d6ab704b48bd5f);
+
+        var markers = [
+            { coords: [-7.236298613466744, 112.73291035705064], popup: "DUTA CARGO SURABAYA" },
+            { coords: [-7.240895631199383, 112.72988976523357], popup: "SENTANA CARGO .PT" },
+            { coords: [-7.236758931375138, 112.71992521494437], popup: "JS CARGO SURABAYA" },
+            { coords: [-7.235209871173766, 112.7238671676234], popup: "CV BERSAMA JAYA CARGO" }
+        ];
+
+        markers.forEach(function(marker) {
+            var mapMarker = L.marker(marker.coords).addTo(map_c3b491db02189ba944d6ab704b48bd5f);
+            var popup = L.popup({ maxWidth: "100%" });
+            popup.setContent($(`<div style="width: 100%; height: 100%;">${marker.popup}</div>`)[0]);
+            mapMarker.bindPopup(popup);
+        });
+    </script>
+</body>
+</html>

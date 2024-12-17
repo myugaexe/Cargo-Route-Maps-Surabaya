@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickTrack Cargo Result</title>
+    <link rel="stylesheet" href="static/route_map_style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">QuickTrack Cargo Result</h1>
+        
+        <div class="map-container">
+            <iframe srcdoc="{{ map_html }}" class="map-frame"></iframe>
+        </div>
+        
+        <p class="text">Titik Awal: <strong>{{ start }}</strong></p>
+        <p class="text">Titik Tujuan: <strong>{{ end }}</strong></p>
+        
+        <p class="text">Jarak Terpendek: <strong>{{ distance }}</strong></p>
+        
+        <p class="text">Estimasi Harga: <strong>Rp {{ price | round(2) }}</strong></p>
+        
+        <a href="/" class="btn">Kembali</a>
+    </div>
+</body>
+</html>

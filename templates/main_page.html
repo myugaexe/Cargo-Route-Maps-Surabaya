@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="static/main_style.css">
+    <title>QuickTrack Cargo Delivery Route</title>
+</head>
+<body>
+    <div class="main-container">
+        <h1>QuickTrack Cargo Delivery Route</h1>
+        <div class="form-container">            
+            <form action="/find-path" method="POST">
+                <div id="alert-container"></div>
+                <div class="titik-awal">
+                    <label for="start" class="form-label">Titik Awal:</label>
+                    <select id="start" name="start" class="form-control" required>
+                        <option value="" disabled selected>Pilih Titik Awal</option>
+                    </select>
+                </div>
+                <div class="titik-tujuan">
+                    <label for="end" class="form-label">Titik Tujuan:</label>
+                    <select id="end" name="end" class="form-control" required>
+                        <option value="" disabled selected>Pilih Titik Tujuan</option>
+                    </select>
+                </div>
+                <div class="form-group kendaraan">
+                    <label for="vehicle" class="form-label">Jenis Kendaraan:</label>
+                    <select id="vehicle" name="vehicle" class="form-control" required>
+                        <option value="truk_kecil">Truk Kecil</option>
+                        <option value="truk_sedang">Truk Sedang</option>
+                        <option value="truk_besar">Truk Besar</option>
+                    </select>
+                </div>
+                <div class="form-group bb">
+                    <label for="weight" class="form-label">Berat Barang (kg):</label>
+                    <input type="number" id="weight" name="weight" class="form-control" required min="1">
+                    <small id="weight-hint" class="form-text text-muted">Masukkan berat barang sesuai dengan batas kendaraan yang dipilih.</small>
+                </div>
+                <button type="submit">Cari Jalur</button>
+            </form>
+            
+            <div class="info">
+                <h2 class="text-center">Informasi Harga Kendaraan</h2>
+                <ul class="pricing-list">
+                    <li><strong>Truk Kecil:</strong> Kapasitas maksimal 1,000 kg, harga Rp200 per kg.</li>
+                    <li><strong>Truk Sedang:</strong> Kapasitas maksimal 5,000 kg, harga Rp500 per kg.</li>
+                    <li><strong>Truk Besar:</strong> Kapasitas maksimal 10,000 kg, harga Rp1,000 per kg.</li>
+                </ul>
+                <div class="price-mechanism">
+                    <h3>Mekanisme Perhitungan Harga</h3>
+                    <p>Harga dihitung berdasarkan rumus berikut:</p>
+                    <code>Harga = Base Price + (Price per kg × Berat Barang)</code>
+                    <p><strong>Base Price:</strong> Rp10,000<br>
+                    <strong>Price per kg:</strong> Bergantung pada jenis kendaraan</p>
+                </div>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com" target="_blank" class="icon" aria-label="Facebook">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </a>
+                    <a href="https://www.instagram.com" target="_blank" class="icon" aria-label="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="https://www.twitter.com" target="_blank" class="icon" aria-label="Twitter">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>        
+        fetch('/static/dataset/places.json')
+            .then(response => response.json())
+            .then(data => {
+                const places = data.places;
+                const startSelect = document.getElementById("start");
+                const endSelect = document.getElementById("end");
+
+                places.forEach(place => {
+                    const optionStart = document.createElement("option");
+                    optionStart.value = place.name;
+                    optionStart.textContent = place.name;
+                    startSelect.appendChild(optionStart);
+
+                    const optionEnd = document.createElement("option");
+                    optionEnd.value = place.name;
+                    optionEnd.textContent = place.name;
+                    endSelect.appendChild(optionEnd);
+                });
+            })
+            .catch(error => console.error('Error loading places data:', error));
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const weightInput = document.getElementById("weight");
+            const vehicleSelect = document.getElementById("vehicle");
+            const form = document.querySelector("form");
+
+            const maxCapacities = {
+                truk_kecil: 1000,
+                truk_sedang: 5000,
+                truk_besar: 10000
+            };
+
+            form.addEventListener("submit", (event) => {
+                const selectedVehicle = vehicleSelect.value;
+                const enteredWeight = parseFloat(weightInput.value);
+
+                if (enteredWeight > maxCapacities[selectedVehicle]) {
+                    event.preventDefault();
+                    showAlert(`Berat barang melebihi kapasitas maksimal untuk ${vehicleSelect.options[vehicleSelect.selectedIndex].text}. Maksimal: ${maxCapacities[selectedVehicle]} kg`);
+                }
+            });
+
+            function showAlert(message) {
+                const alertContainer = document.getElementById("alert-container");
+                const alert = document.createElement("div");
+                alert.className = "alert";
+                alert.innerHTML = `
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>${message}</span>
+                    <button onclick="this.parentElement.style.animation='fadeOut 0.5s forwards'; setTimeout(() => this.parentElement.remove(), 500);">&times;</button>
+                `;
+                alertContainer.appendChild(alert);
+            }
+        });
+    </script>
+</body>
+</html>
